@@ -24,7 +24,7 @@
 .\" from The Open Group.
 .\" 
 .\"
-.\" $XFree86: xc/programs/xrx/plugin/libxrx.man,v 1.8 2001/12/14 20:02:17 dawes Exp $
+.\" $XFree86$
 .\"
 .TH LIBXRX 1 __xorgversion__
 .SH NAME
