@@ -22,7 +22,10 @@
 .\" not be used in advertising or otherwise to promote the sale, use or
 .\" other dealings in this Software without prior written authorization
 .\" from The Open Group.
-.TH TESTPLUGIN 1 "Release 6.4" "X Version 11"
+.\"
+.\" $XFree86: xc/programs/xrx/testplugin/testplugin.man,v 1.7 2001/12/14 20:02:21 dawes Exp $
+.\"
+.TH TESTPLUGIN 1 __xorgversion__
 .SH NAME
 testplugin - a Netscape Plug-in test bed utility
 .SH SYNOPSIS

@@ -26,6 +26,8 @@ other dealings in this Software without prior written authorization from
 The Open Group.
 
 */
+/* $XFree86: xc/programs/xrx/helper/GetUrl.c,v 1.4 2001/12/14 20:02:16 dawes Exp $ */
+
 /*
  * This file is really split into two major parts where GetUrl is implemented
  * in two completely different ways.
@@ -93,7 +95,7 @@ GetUrl(char *url, char **reply_ret, int *len_ret)
 #include <ctype.h>
 
 /* get definitions for the HTTP protocol */
-#if (defined(__STDC__) && !defined(UNIXCPP)) || defined(ANSICPP)
+#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _HttpTrans##func
 #else
 #define TRANS(func) _HttpTrans/**/func

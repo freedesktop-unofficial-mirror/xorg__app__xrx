@@ -26,8 +26,10 @@ other dealings in this Software without prior written authorization from
 The Open Group.
 
 */
+/* $XFree86: xc/programs/xrx/rx/XUrls.c,v 1.11 2001/12/14 20:02:19 dawes Exp $ */
 
 #include "RxI.h"
+#include "XUrls.h"
 #include <sys/utsname.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -36,9 +38,6 @@ The Open Group.
 #include <stdlib.h>
 #include <limits.h>		/* for MAXHOSTNAMELEN */
 #include <errno.h>
-#ifdef X_NOT_STDC_ENV
-extern int errno;
-#endif
 
 /* and in case we didn't get it from the headers above */
 #ifndef MAXHOSTNAMELEN
@@ -68,11 +67,7 @@ MyBestHostname (
   char* display_name, 
   char* dest_url)
 {
-  struct sockaddr_in local, remote;
-  struct hostent* hp;
   struct utsname host;
-  int s, rv, namelen;
-  char dest_hostname[MAXHOSTNAMELEN + 1];
 
   *myname = '\0';
 
@@ -81,6 +76,11 @@ MyBestHostname (
 
 /* for some reason this doesn't work on Solaris 2.x */
 #if !(defined(sun) && defined(SVR4))
+    struct sockaddr_in local, remote;
+    struct hostent* hp;
+    int s, rv, namelen;
+    char dest_hostname[MAXHOSTNAMELEN + 1];
+
     ParseHostname (dest_url, dest_hostname, sizeof dest_hostname);
 
     hp = gethostbyname (dest_hostname);
@@ -115,7 +115,7 @@ MyBestHostname (
 
 	  if (rv != -1) {
 	    namelen = sizeof local;
-	    rv = getsockname (s, (struct sockaddr*) &local, &namelen);
+	    rv = getsockname (s, (struct sockaddr*) &local, (void *)&namelen);
 
 	    if (rv != -1) {
 	      hp = gethostbyaddr ((char*) &local.sin_addr.s_addr, 
@@ -166,7 +166,7 @@ MyBestHostname (
 char *
 GetXUrl(char *display_name, char *auth, char* dest_url)
 {
-    char *dpy_name, *proto;
+    char *dpy_name, *proto = NULL;
     char *url, *ptr;
     char *name;
     struct hostent *host;
@@ -241,7 +241,7 @@ GetXUrl(char *display_name, char *auth, char* dest_url)
 char *
 GetXPrintUrl(char *display_name, char *printer, char *auth, char* dest_url)
 {
-    char *dpy_name, *proto;
+    char *dpy_name, *proto = NULL;
     char *url, *ptr;
     char *name;
     struct hostent *host;

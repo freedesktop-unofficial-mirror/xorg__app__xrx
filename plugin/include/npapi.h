@@ -4,6 +4,7 @@
  *  npapi.h Revision: 1.76
  *  Netscape client plug-in API spec
  */
+/* $XFree86: xc/programs/xrx/plugin/include/npapi.h,v 1.5 2001/07/25 15:05:28 dawes Exp $ */
 
 #ifndef _NPAPI_H_
 #define _NPAPI_H_
@@ -37,21 +38,13 @@
 typedef unsigned short uint16;
 #endif
 #ifndef _UINT32
-#if defined(__alpha)
 typedef unsigned int uint32;
-#else /* __alpha */
-typedef unsigned long uint32;
-#endif /* __alpha */
 #endif
 #ifndef _INT16
 typedef short int16;
 #endif
 #ifndef _INT32
-#if defined(__alpha)
 typedef int int32;
-#else /* __alpha */
-typedef long int32;
-#endif /* __alpha */
 #endif
 
 #ifndef FALSE
@@ -60,9 +53,7 @@ typedef long int32;
 #ifndef TRUE
 #define TRUE (1)
 #endif
-#ifndef NULL
-#define NULL (0L)
-#endif
+#include <stddef.h>
 
 typedef unsigned char	NPBool;
 typedef void*			NPEvent;
