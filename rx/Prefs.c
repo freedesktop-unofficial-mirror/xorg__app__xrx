@@ -26,12 +26,17 @@ other dealings in this Software without prior written authorization from
 The Open Group.
 
 */
+/* $XFree86: xc/programs/xrx/rx/Prefs.c,v 1.6 2001/12/14 20:02:19 dawes Exp $ */
 
 #include "Prefs.h"
 #include <ctype.h>
 #include "RxI.h"		/* for Malloc & Free */
 #include <X11/StringDefs.h>
+#ifndef Lynx
 #include <sys/socket.h>
+#else
+#include <socket.h>
+#endif
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
