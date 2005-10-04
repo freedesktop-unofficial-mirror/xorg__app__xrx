@@ -1,0 +1,4 @@
+2005-10-05  Kevin E. Martin  <kem-at-freedesktop-dot-org>
+
+	* htdocs/Makefile.am:
+	Remove non-existant file

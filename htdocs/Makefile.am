@@ -22,7 +22,6 @@
 EXTRA_DIST =				\
 	bitmap				\
 	bitmap.html			\
-	blah				\
 	dtcm				\
 	dtcm.html			\
 	excel				\
