@@ -38,3 +38,6 @@ xrx_SOURCES =		\
 	$(top_srcdir)/rx/XDpyName.c	\
 	$(top_srcdir)/rx/XUrls.c		\
 	$(top_srcdir)/rx/BuildReq.c
+
+dist_man1_MANS = \
+	xrx.man

@@ -34,3 +34,6 @@ libxrx_la_SOURCES = \
 	RxPlugin.h	\
 	SetWin.c	\
 	stubs.c
+
+dist_man1_MANS = \
+	libxrx.man
