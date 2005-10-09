@@ -24,7 +24,7 @@ lib_LTLIBRARIES = libxrx.la
 
 INCLUDES = -I$(top_srcdir)/plugin/include -I$(top_srcdir)/rx
 
-AM_CFLAGS = -DXP_UNIX
+AM_CFLAGS = -DXP_UNIX @XRX_CFLAGS@
 
 libxrx_la_SOURCES = \
 	Global.c	\
