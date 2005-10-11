@@ -28,3 +28,5 @@ libxrxnest_la_SOURCES = \
 	RxPlugin.h	\
 	SetWin.c	\
 	XnestDis.c
+
+AM_CFLAGS = @XRX_CFLAGS@
