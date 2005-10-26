@@ -29,4 +29,6 @@ libxrxnest_la_SOURCES = \
 	SetWin.c	\
 	XnestDis.c
 
-AM_CFLAGS = @XRX_CFLAGS@
+AM_CFLAGS = @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@
+
+libxrxnest_la_LIBADD = @XRX_LIBS@ @XRX_PLUGIN_LIBS@
