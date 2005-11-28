@@ -39,7 +39,7 @@ libxrx_la_SOURCES = \
 
 appman_SOURCES = libxrx.man
 
-appmandir =  $(mandir)/man$(APP_MAN_SUFFIX)
+appmandir = $(APP_MAN_DIR)
 
 appman_DATA = $(appman_SOURCES:man=@APP_MAN_SUFFIX@)
 
