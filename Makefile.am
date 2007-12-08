@@ -21,7 +21,7 @@
 
 SUBDIRS = helper plugin libxplugin htdocs cgi-bin testplugin xnest-plugin rx
 
-EXTRA_DIST += ChangeLog
+EXTRA_DIST = ChangeLog
 MAINTAINERCLEANFILES = ChangeLog
 
 .PHONY: ChangeLog
