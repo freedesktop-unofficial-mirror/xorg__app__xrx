@@ -35,6 +35,7 @@ The Open Group.
 #include "Prefs.h"
 #include <X11/StringDefs.h>
 
+#include <stdlib.h>
 #include <limits.h>		/* for MAXHOSTNAMELEN */
 /* and in case we didn't get it from the headers above */
 #ifndef MAXHOSTNAMELEN

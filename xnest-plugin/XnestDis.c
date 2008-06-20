@@ -30,6 +30,7 @@ The Open Group.
 
 #include "RxPlugin.h"
 #include <sys/stat.h>
+#include <stdlib.h>
 
 /***********************************************************************
  * Utility functions and global variable to manage display numbers
