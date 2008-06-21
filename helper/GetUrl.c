@@ -112,11 +112,11 @@ OpenConnection(char *hostname, int port)
     XtransConnInfo trans_conn = NULL;	/* transport connection object */
     int connect_stat;
     char address[128];		/* address passed to the transport layer */
-    char protocol[] = "tcp";	/* hardcoded transport */
+    const char protocol[] = "tcp";	/* hardcoded transport */
 
     /* make the address of the form: protocol/host:port */
-    sprintf(address,"%s/%s:%d",
-	protocol ? protocol : "",
+    snprintf(address, sizeof(address), "%s/%s:%d",
+	protocol,
 	hostname ? hostname : "",
 	port);
 
