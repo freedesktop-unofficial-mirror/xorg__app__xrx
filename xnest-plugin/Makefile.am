@@ -20,15 +20,33 @@
 
 lib_LTLIBRARIES = libxrxnest.la
 
-INCLUDES = -I$(top_srcdir)/plugin/include -I$(top_srcdir)/rx -DXP_UNIX
+RXSRC = $(top_srcdir)/rx
+PLUGINSRC = $(top_srcdir)/plugin
+
+INCLUDES = -I$(RXSRC)
+
+# -DPLUGIN_TRACE can be added to the following definition to debug
+PLUGIN_DEFINES = -DXP_UNIX -DMOZ_X11 -DOJI
+
+DEFINES = -DNETSCAPE_PLUGIN $(PLUGIN_DEFINES)
+
+AM_CPPFLAGS = $(DEFINES)
+
+PARAMS_SRCS = $(RXSRC)/PRead.c $(RXSRC)/PParse.c $(RXSRC)/BuildReq.c
+XMISC_SRCS = $(RXSRC)/XUrls.c
+PLUGIN_SRCS = $(PLUGINSRC)/Main.c $(PLUGINSRC)/stubs.c
 
 libxrxnest_la_SOURCES = \
 	NewNDest.c	\
 	PProcess.c	\
 	RxPlugin.h	\
 	SetWin.c	\
-	XnestDis.c
+	XnestDis.c	\
+	$(PARAMS_SRCS)	\
+	$(XMISC_SRCS)	\
+	$(PLUGIN_SRCS)
 
-AM_CFLAGS = @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@
+AM_CFLAGS = @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@ @PLUGIN_CFLAGS@
 
 libxrxnest_la_LIBADD = @XRX_LIBS@ @XRX_PLUGIN_LIBS@
+libxrxnest_la_LDFLAGS = -avoid-version

@@ -22,13 +22,28 @@ SUBDIRS = common include
 
 lib_LTLIBRARIES = libxrx.la
 
-INCLUDES = -I$(top_srcdir)/plugin/include -I$(top_srcdir)/rx
+RXSRC = $(top_srcdir)/rx
 
-AM_CFLAGS = -DXP_UNIX @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@
+INCLUDES = -I$(RXSRC)
+
+# -DPLUGIN_TRACE can be added to the following definition to debug
+PLUGIN_DEFINES = -DXP_UNIX -DMOZ_X11 -DOJI
+
+DEFINES = -DNETSCAPE_PLUGIN $(PLUGIN_DEFINES)
+
+AM_CPPFLAGS = $(DEFINES)
+AM_CFLAGS = -DXP_UNIX @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@ @PLUGIN_CFLAGS@
 
 libxrx_la_LIBADD = @XRX_LIBS@ @XRX_PLUGIN_LIBS@
+libxrx_la_LDFLAGS = -avoid-version
+
+PARAMS_SRCS = $(RXSRC)/PRead.c $(RXSRC)/PParse.c $(RXSRC)/BuildReq.c
+XMISC_SRCS = $(RXSRC)/XUrls.c $(RXSRC)/XAuth.c $(RXSRC)/XDpyName.c \
+	$(RXSRC)/Prefs.c
 
 libxrx_la_SOURCES = \
+	$(PARAMS_SRCS)	\
+	$(XMISC_SRCS)	\
 	Global.c	\
 	Main.c		\
 	NewNDest.c	\

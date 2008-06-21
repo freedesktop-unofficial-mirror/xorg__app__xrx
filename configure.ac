@@ -49,6 +49,23 @@ PKG_CHECK_MODULES(XRX, x11 xt xext xtrans xproxymngproto xau)
 AC_SUBST(XRX_CFLAGS)
 AC_SUBST(XRX_LIBS)
 
+# Check for mozilla/firefox plugin headers via pkg-config.
+# If not found, fall back to the ancient copy we carry around.
+if test "x$PLUGIN_CFLAGS" = x ; then
+    PKG_CHECK_MODULES([MOZILLA_PLUGIN], [mozilla-plugin], 
+	[PLUGIN_CFLAGS=${MOZILLA_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
+
+    if test "x$PLUGIN_CFLAGS" = x ; then
+	PKG_CHECK_MODULES([FIREFOX_PLUGIN], [firefox-plugin],
+	    [PLUGIN_CFLAGS=${FIREFOX_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
+
+	if test "x$PLUGIN_CFLAGS" = x ; then
+	    PLUGIN_CFLAGS=-I$(top_srcdir)/plugin/include
+	fi
+    fi
+fi
+AC_SUBST(PLUGIN_CFLAGS)
+
 XAW_CHECK_XPRINT_SUPPORT(XRX_PLUGIN)
 AC_SUBST(XRX_PLUGIN_CFLAGS)
 AC_SUBST(XRX_PLUGIN_LIBS)

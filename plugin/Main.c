@@ -137,7 +137,13 @@ NPP_GetMIMEDescription(void)
 }
 
 NPError
-NPP_GetValue(void *future, NPPVariable variable, void *value)
+NPP_GetValue(
+#if NP_VERSION_MINOR < 12
+    void *future,
+#else
+    NPP instance,
+#endif    
+    NPPVariable variable, void *value)
 {
     NPError err = NPERR_NO_ERROR;
 
