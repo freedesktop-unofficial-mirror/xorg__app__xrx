@@ -28,9 +28,10 @@
 .\"
 .TH LIBXRX 1 __xorgversion__
 .SH NAME
-libxrx - RX Netscape Navigator Plug-in
+libxrx - RX Web Browser Plug-in
 .SH DESCRIPTION
-The \fBRX Plug-in\fP may be used with Netscape Navigator (3.0 or later) to
+The \fBRX Plug-in\fP may be used with web browsers in the Mozilla family,
+including Netscape Navigator (3.0 or later), Firefox, and SeaMonkey, to
 interpret documents in the RX MIME type format and start remote
 applications.
 .PP
@@ -48,23 +49,22 @@ it is supported by your X server, to cause the remote application to be
 embedded within the browser page from which it was launched.
 .PP
 .SH INSTALLATION
-To install the \fBRX Plug-in\fP so that Netscape Navigator can use it, find
-the file named libxrx.so.6.3 or libxrx.sl.6.3 (or similar, depending on
-your platform) in <ProjectRoot>/lib (e.g. /usr/X11R6/lib) and copy it to
-either /usr/local/lib/netscape/plugins or $HOME/.netscape/plugins. Do
-not install the symlinks libxrx.so or libxrx.sl; they would confuse
-Netscape.
+To install the \fBRX Plug-in\fP so that the web browser can use it, find
+the file named libxrx.so or libxrx.sl (or similar, depending on
+your platform) in __ProjectRoot__/lib and copy it to the browser plugin
+directory in the system installation or your home directory (such as
+/usr/lib/firefox/plugins or $HOME/.firefox/plugins).
 .PP
-If you have configured Netscape Navigator to use the RX helper program
+If you have configured the web browser to use the RX helper program
 (\fBxrx\fP), you must reconfigure it. Generally you simply need to remove
 or comment out the line you may have previously added in your mailcap file
 to use the RX helper program.
 Otherwise the plug-in will not be enabled. (The usual comment character for
 mailcap is ``#''.)
 .PP
-If you are already running Netscape Navigator, you need to exit and restart
+If you are already running the web browser, you need to exit and restart
 it after copying the plug-in library so the new plug-in will be found.
-Once this is done you can check that Navigator has successfully loaded the
+Once this is done you can check that the browser has successfully loaded the
 plug-in by checking the ``About Plug-ins'' page from the Help menu. This
 should show something like:
 
@@ -78,7 +78,7 @@ should show something like:
     application/x-rx  X Remote Activation Plug-in  xrx       Yes
 
 .PP
-Once correctly configured, Netscape Navigator will activate the \fBRX
+Once correctly configured, the web browser will activate the \fBRX
 Plug-in\fP whenever you retrieve any document of the MIME type
 \fIapplication/x-rx\fP.
 .PP
@@ -146,7 +146,7 @@ Print service, the \fBRX Plug-in\fP has to create the key with an infinite
 timeout since nobody knows when the application will actually connect to
 the X Print server. It then revokes the key when its instance is destroyed
 (that is when you go to another page). However, if the Plug-in does not get
-destroyed properly, which happens when Netscape Navigator dies
+destroyed properly, which happens when the browser dies
 unexpectedly, the print authorization key will never get revoked.
 .PP
 .SH SEE ALSO
