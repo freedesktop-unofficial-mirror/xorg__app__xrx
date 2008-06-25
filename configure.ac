@@ -22,7 +22,7 @@ dnl
 dnl Process this file with autoconf to create configure.
 
 AC_PREREQ([2.57])
-AC_INIT(xrx,[1.0.1], [xorg@freedesktop.org],xrx)
+AC_INIT(xrx,[1.0.2], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],xrx)
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
