@@ -55,6 +55,7 @@ The Open Group.
 #define _RxPLugin_h
 
 #include "npapi.h"
+#include "config.h"
 #include <X11/Xos.h>
 #include <X11/Intrinsic.h>
 #include <X11/extensions/Xag.h>
@@ -141,9 +142,9 @@ extern PluginGlobal RxGlobal;
 
 
 #define PLUGIN_NAME             "RX Plug-in"
-#define PLUGIN_DESCRIPTION      "X Remote Activation Plug-in"
+#define PLUGIN_DESCRIPTION      "X Remote Activation Plug-in " PACKAGE_VERSION
 #define PLUGIN_MIME_DESCRIPTION \
-	"application/x-rx:xrx:X Remote Activation Plug-in"
+	"application/x-rx:xrx:X Remote Activation Service"
 
 
 /* functions to init and free private members */
