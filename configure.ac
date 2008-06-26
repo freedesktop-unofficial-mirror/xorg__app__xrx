@@ -60,7 +60,7 @@ if test "x$PLUGIN_CFLAGS" = x ; then
 	    [PLUGIN_CFLAGS=${FIREFOX_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
 
 	if test "x$PLUGIN_CFLAGS" = x ; then
-	    PLUGIN_CFLAGS=-I$(top_srcdir)/plugin/include
+	    PLUGIN_CFLAGS='-I$(top_srcdir)/plugin/include'
 	fi
     fi
 fi
