@@ -161,7 +161,7 @@ NPP_GetValue(
 }
 
 jref
-NPP_GetJavaClass()
+NPP_GetJavaClass(void)
 {
     return NULL;
 }
@@ -289,6 +289,7 @@ NPP_NewStream(NPP instance,
  *	still called but can safely be ignored using this strategy.
  */
 
+static
 int32 STREAMBUFSIZE = 0X0FFFFFFF; /* If we are reading from a file in NPAsFile
 				   * mode so we can take any size stream in our
 				   * write call (since we ignore it) */
@@ -368,7 +369,7 @@ NPP_Write(NPP instance, NPStream *stream, int32 offset, int32 len, void *buf)
     return len;			/* The number of bytes accepted */
 }
 
-void
+static void
 StartApplication(PluginInstance* This)
 {
 #ifndef NO_STARTING_STATE
@@ -384,7 +385,7 @@ StartApplication(PluginInstance* This)
     This->parse_reply = 1;	/* we want to print out the answer  */
 }
 
-void
+static void
 StartCB(Widget widget, XtPointer client_data, XtPointer call_data)
 {
     PluginInstance* This = (PluginInstance*) client_data;

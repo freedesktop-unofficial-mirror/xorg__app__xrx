@@ -47,7 +47,7 @@ The Open Group.
 static char xnest_display_numbers[MAX_PLUGINS];
 
 void
-RxpInitXnestDisplayNumbers()
+RxpInitXnestDisplayNumbers(void)
 {
     memset(xnest_display_numbers, 0, sizeof(char) * MAX_PLUGINS);
 }
@@ -81,7 +81,7 @@ Bool IsDisplayNumFree(int id)
 
 /* function returning first display number available */
 int
-RxpXnestDisplayNumber()
+RxpXnestDisplayNumber(void)
 {
     int i;
     for (i = 0; i < MAX_PLUGINS; i++)

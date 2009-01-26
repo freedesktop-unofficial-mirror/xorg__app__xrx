@@ -37,6 +37,8 @@ The Open Group.
  * directly.
  */
 
+#include "GetUrl.h"
+
 #define Free(b) if (b) free(b)
 
 #ifdef XUSE_WWW

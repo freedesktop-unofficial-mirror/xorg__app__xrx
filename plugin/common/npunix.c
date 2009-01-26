@@ -147,7 +147,7 @@ void NPN_ReloadPlugins(NPBool reloadPages)
 	CallNPN_ReloadPluginsProc(gNetscapeFuncs.reloadplugins, reloadPages);
 }
 
-JRIEnv* NPN_GetJavaEnv()
+JRIEnv* NPN_GetJavaEnv(void)
 {
 	return CallNPN_GetJavaEnvProc(gNetscapeFuncs.getJavaEnv);
 }
@@ -170,7 +170,7 @@ jref NPN_GetJavaPeer(NPP instance)
  *
  ***********************************************************************/
 
-NPError
+static NPError
 Private_New(NPMIMEType pluginType, NPP instance, uint16 mode,
 		int16 argc, char* argn[], char* argv[], NPSavedData* saved)
 {
@@ -180,14 +180,14 @@ Private_New(NPMIMEType pluginType, NPP instance, uint16 mode,
 	return ret;	
 }
 
-NPError
+static NPError
 Private_Destroy(NPP instance, NPSavedData** save)
 {
 	PLUGINDEBUGSTR("Destroy");
 	return NPP_Destroy(instance, save);
 }
 
-NPError
+static NPError
 Private_SetWindow(NPP instance, NPWindow* window)
 {
 	NPError err;
@@ -196,7 +196,7 @@ Private_SetWindow(NPP instance, NPWindow* window)
 	return err;
 }
 
-NPError
+static NPError
 Private_NewStream(NPP instance, NPMIMEType type, NPStream* stream,
 			NPBool seekable, uint16* stype)
 {
@@ -206,7 +206,7 @@ Private_NewStream(NPP instance, NPMIMEType type, NPStream* stream,
 	return err;
 }
 
-int32
+static int32
 Private_WriteReady(NPP instance, NPStream* stream)
 {
 	unsigned int result;
@@ -215,7 +215,7 @@ Private_WriteReady(NPP instance, NPStream* stream)
 	return result;
 }
 
-int32
+static int32
 Private_Write(NPP instance, NPStream* stream, int32 offset, int32 len,
 		void* buffer)
 {
@@ -225,7 +225,7 @@ Private_Write(NPP instance, NPStream* stream, int32 offset, int32 len,
 	return result;
 }
 
-void
+static void
 Private_StreamAsFile(NPP instance, NPStream* stream, const char* fname)
 {
 	PLUGINDEBUGSTR("StreamAsFile");
@@ -233,7 +233,7 @@ Private_StreamAsFile(NPP instance, NPStream* stream, const char* fname)
 }
 
 
-NPError
+static NPError
 Private_DestroyStream(NPP instance, NPStream* stream, NPError reason)
 {
 	NPError err;
@@ -243,14 +243,14 @@ Private_DestroyStream(NPP instance, NPStream* stream, NPError reason)
 }
 
 
-void
+static void
 Private_Print(NPP instance, NPPrint* platformPrint)
 {
 	PLUGINDEBUGSTR("Print");
 	NPP_Print(instance, platformPrint);
 }
 
-JRIGlobalRef
+static JRIGlobalRef
 Private_GetJavaClass(void)
 {
     jref clazz = NPP_GetJavaClass();

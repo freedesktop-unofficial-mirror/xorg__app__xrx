@@ -55,10 +55,10 @@ The Open Group.
 #define NO_TIMEOUT 0
 
 /* a few global */
-Display *pdpy;
-int security_event_type_base;
-XSecurityAuthorization ui_auth_id;
-XSecurityAuthorization print_auth_id;
+static Display *pdpy;
+static int security_event_type_base;
+static XSecurityAuthorization ui_auth_id;
+static XSecurityAuthorization print_auth_id;
 
 #define RevokedEventType \
 	(security_event_type_base + XSecurityAuthorizationRevoked)
@@ -72,14 +72,14 @@ ReadFile(char *filename)
     char *stream;
 
     if ((fd = open(filename, O_RDONLY)) < 0)
-	return(0);
+	return(NULL);
     fstat(fd, &st);
     stream = (char *)malloc(st.st_size+1);
-    if (stream == 0)
-	return(0);
+    if (stream == NULL)
+	return(NULL);
     if ((st.st_size = read(fd, stream, st.st_size)) < 0) {
 	free(stream);
-	return(0);
+	return(NULL);
     }
     close(fd);
     stream[st.st_size] = '\0';
@@ -106,13 +106,6 @@ OpenXPrintDisplay(Display *dpy, char **printer_return)
 	    pdpy = NULL;
     }
     return pdpy;
-}
-
-static void
-CloseXPrintDisplay(Display *dpy, Display *pdpy)
-{
-    if (pdpy != NULL && pdpy != dpy)
-        XCloseDisplay(pdpy);
 }
 
 /* process the given RxParams and make the RxReturnParams */
@@ -340,7 +333,7 @@ ProcessParams(Display *dpy, Preferences *prefs, RxParams *in,
 /* parse CGI reply looking for error status line,
  * and return following message
  */
-int
+static int
 ParseReply(char *reply, int reply_len, char **reply_ret, int *reply_len_ret)
 {
     char *ptr, *end;
@@ -403,7 +396,7 @@ exit:
  * using it is gone).
  * We can then exit since we do not have anything else to do.
  */
-Boolean 
+static Boolean 
 RevokeD(XEvent *xev)
 {
     if (xev->type == RevokedEventType) { /* should always be true */
@@ -439,20 +432,20 @@ main(int argc, char *argv[])
 
     rx_argc = 0;
 
-    toplevel = XtAppInitialize(&app_context, "Xrx", 0, 0,
+    toplevel = XtAppInitialize(&app_context, "Xrx", NULL, 0,
 #if XtSpecificationRelease > 4
 			       &argc,
 #else
 			       (Cardinal *)&argc,
 #endif
-			       argv, 0, 0, 0);
+			       argv, NULL, NULL, 0);
 
     if (argc < 2) {
 	fprintf(stderr, "Usage: %s <file>\n", argv[0]);
 	exit(1);
     }
 
-    if ((stream = ReadFile(argv[1])) == 0) {
+    if ((stream = ReadFile(argv[1])) == NULL) {
 	fprintf(stderr, "%s: cannot open file %s\n", argv[0], argv[1]);
 	exit(1);
     }

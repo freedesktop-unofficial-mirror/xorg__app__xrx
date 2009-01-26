@@ -47,6 +47,8 @@ The Open Group.
 #include <X11/PM/PM.h>
 #include <X11/PM/PMproto.h>
 
+#include "XDpyName.h"
+
 #define DEFAULT_PROXY_MANAGER ":6500"
 
 /*
@@ -160,7 +162,10 @@ The Open Group.
        return; \
     }
 
-static void PMprocessMessages ();
+static void
+PMprocessMessages(IceConn iceConn, IcePointer clientData,
+		  int opcode, unsigned long length, Bool swap,
+		  IceReplyWaitInfo *replyWait, Bool *replyReadyRet);
 
 #ifdef XP_UNIX
 #define PMOPCODE RxGlobal.pm_opcode
@@ -183,11 +188,8 @@ typedef struct {
 
 #if 0
 #else
-static int findproxy (proxyname, manager, server, name)
-    char*			proxyname;
-    char*			manager;
-    char*			server;
-    char*			name;
+static int
+findproxy(char *proxyname, char *manager, char *server, char *name)
 {
 #ifndef XP_UNIX
     IceConn			ice_conn;
@@ -297,17 +299,9 @@ static int findproxy (proxyname, manager, server, name)
 
 
 static void
-PMprocessMessages (iceConn, clientData, opcode,
-    length, swap, replyWait, replyReadyRet)
-
-IceConn		 iceConn;
-IcePointer       clientData;
-int		 opcode;
-unsigned long	 length;
-Bool		 swap;
-IceReplyWaitInfo *replyWait;
-Bool		 *replyReadyRet;
-
+PMprocessMessages(IceConn iceConn, IcePointer clientData,
+		  int opcode, unsigned long length, Bool swap,
+		  IceReplyWaitInfo *replyWait, Bool *replyReadyRet)
 {
     if (replyWait)
 	*replyReadyRet = False;

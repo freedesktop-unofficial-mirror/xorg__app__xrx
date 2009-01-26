@@ -83,6 +83,8 @@ GetWindowGeometry(
 	*border_width = wattr.border_width;
 	*cmap = wattr.colormap;
     }
+    else
+	*cmap = NotUseful;
     if (sizehints) {
 	XGetWMNormalHints (dpy, win, sizehints, &mask);
 
@@ -337,7 +339,7 @@ ResetWMColormap(PluginInstance* This, Window win)
 /***********************************************************************
  * Event Handler to reparent client window under plugin window 
  ***********************************************************************/
-/* static */ void
+static void
 SubstructureRedirectHandler (
     Widget widget, 
     XtPointer client_data, 

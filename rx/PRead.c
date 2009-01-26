@@ -136,7 +136,7 @@ NextParam(char *stream, NString *param)
 			    &word);
 	else {
 	    /* no more elements stop here */
-	    param->ptr = 0;
+	    param->ptr = NULL;
 	    param->length = 0;
 
 	    return stream;
@@ -163,7 +163,7 @@ GetLiteralValue(NString *literal)
 
     value = vptr = (char *)Malloc(literal->length + 1);
     if (!value)
-	return 0;
+	return NULL;
 
     ptr = literal->ptr;
     limit = ptr + literal->length;

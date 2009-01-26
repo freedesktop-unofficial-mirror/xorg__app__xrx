@@ -422,7 +422,7 @@ RxInitializeParams(RxParams *params)
     params->x_print_lbx = RxUndef;
 }
 
-void
+static void
 FreeAuthListData(char **list)
 {
     while (*list != NULL)

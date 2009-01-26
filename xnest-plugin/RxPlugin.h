@@ -111,8 +111,8 @@ RxpProcessParams(PluginInstance* This, RxParams *in, RxReturnParams *out);
 extern void
 RxpSetStatusWidget(PluginInstance*, PluginState);
 
-extern void RxpInitXnestDisplayNumbers();
-extern int RxpXnestDisplayNumber();
+extern void RxpInitXnestDisplayNumbers(void);
+extern int RxpXnestDisplayNumber(void);
 extern void RxpFreeXnestDisplayNumber(int i);
 extern char * RxpXnestDisplay(int display_number);
 

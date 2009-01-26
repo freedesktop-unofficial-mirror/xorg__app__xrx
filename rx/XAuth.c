@@ -36,6 +36,7 @@ The Open Group.
 #ifndef XFUNCPROTO_NOT_AVAILABLE
 #include <X11/Xauth.h>
 #endif
+#include "XAuth.h"
 
 static void
 printhexdigit(char *ptr, unsigned int d)
@@ -136,7 +137,7 @@ SECURITY extension not supported\n");
     }
     auth_return = XSecurityGenerateAuthorization(dpy, auth_in, xsamask,
 						 &xsa, auth_id_ret);
-    if (auth_return == 0) {
+    if (auth_return == NULL) {
 	fprintf(stderr,
 		"Error: Failed to setup authorization, cannot create key\n");
 	goto error;

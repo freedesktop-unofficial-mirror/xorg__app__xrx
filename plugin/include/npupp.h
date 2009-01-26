@@ -984,6 +984,7 @@ extern "C" {
 /* plugin meta member functions */
 
 char*	NP_GetMIMEDescription(void);
+NPError NP_GetValue(void *future, NPPVariable variable, void *value);
 NPError	NP_Initialize(NPNetscapeFuncs*, NPPluginFuncs*);
 NPError	NP_Shutdown(void);
 

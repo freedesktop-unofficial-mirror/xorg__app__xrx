@@ -69,11 +69,11 @@ extern "C" {
 #elif defined(macintosh) || defined(Macintosh) || defined(THINK_C)
 #	if defined(__MWERKS__)				/* Metrowerks */
 #		if !__option(enumsalwaysint)
-#			error You need to define 'Enums Always Int' for your project.
+#			error You need to define "Enums Always Int" for your project.
 #		endif
 #		if defined(GENERATING68K) && !GENERATINGCFM 
 #			if !__option(fourbyteints) 
-#				error You need to define 'Struct Alignment: 68k' for your project.
+#				error You need to define "Struct Alignment: 68k" for your project.
 #			endif
 #		endif /* !GENERATINGCFM */
 #	elif defined(__SC__)				/* Symantec */
