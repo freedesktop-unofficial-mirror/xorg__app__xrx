@@ -55,7 +55,6 @@ AC_SUBST(XRX_CFLAGS)
 AC_SUBST(XRX_LIBS)
 
 # Check for mozilla/firefox plugin headers via pkg-config.
-# If not found, fall back to the ancient copy we carry around.
 if test "x$PLUGIN_CFLAGS" = x ; then
     PKG_CHECK_MODULES([MOZILLA_PLUGIN], [mozilla-plugin], 
 	[PLUGIN_CFLAGS=${MOZILLA_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
@@ -63,13 +62,22 @@ if test "x$PLUGIN_CFLAGS" = x ; then
     if test "x$PLUGIN_CFLAGS" = x ; then
 	PKG_CHECK_MODULES([FIREFOX_PLUGIN], [firefox-plugin],
 	    [PLUGIN_CFLAGS=${FIREFOX_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
-
-	if test "x$PLUGIN_CFLAGS" = x ; then
-	    PLUGIN_CFLAGS='-I$(top_srcdir)/plugin/include'
-	fi
     fi
 fi
+
+# Check which header to include, the older npupp.h or the newer npfunctions.h
+# See https://bugzilla.mozilla.org/show_bug.cgi?id=455458
+save_CPPFLAGS="${CPPFLAGS}"
+CPPFLAGS="${PLUGIN_CFLAGS} ${save_CPPFLAGS}"
+AC_CHECK_HEADERS([npupp.h npfunctions.h], [PLUGIN_HEADERS_FOUND=yes])
+CPPFLAGS="${save_CPPFLAGS}"
+
+# If neither header found, fall back to the ancient copy we carry around.
+if test "x$PLUGIN_HEADERS_FOUND" != "xyes" ; then
+    PLUGIN_CFLAGS='-I$(top_srcdir)/plugin/include'
+fi
 AC_SUBST(PLUGIN_CFLAGS)
+
 
 PKG_CHECK_MODULES(XRX_PLUGIN, xaw7)
 AC_SUBST(XRX_PLUGIN_CFLAGS)

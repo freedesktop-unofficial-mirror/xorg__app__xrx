@@ -15,9 +15,14 @@
 
 #define XP_UNIX 1
 
+#include "config.h"
 #include <stdio.h>
 #include "npapi.h"
-#include "npupp.h"
+#ifdef HAVE_NPFUNCTIONS_H
+# include <npfunctions.h>
+#else
+# include "npupp.h"
+#endif
 
 /*
  * Define PLUGIN_TRACE to have the wrapper functions print
