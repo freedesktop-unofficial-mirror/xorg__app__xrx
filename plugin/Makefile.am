@@ -35,7 +35,7 @@ AM_CPPFLAGS = $(DEFINES)
 AM_CFLAGS = -DXP_UNIX @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@ @PLUGIN_CFLAGS@
 
 libxrx_la_LIBADD = @XRX_LIBS@ @XRX_PLUGIN_LIBS@
-libxrx_la_LDFLAGS = -avoid-version
+libxrx_la_LDFLAGS = -avoid-version -module
 
 PARAMS_SRCS = $(RXSRC)/PRead.c $(RXSRC)/PParse.c $(RXSRC)/BuildReq.c
 XMISC_SRCS = $(RXSRC)/XUrls.c $(RXSRC)/XAuth.c $(RXSRC)/XDpyName.c \

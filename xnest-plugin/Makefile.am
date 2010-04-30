@@ -49,4 +49,4 @@ libxrxnest_la_SOURCES = \
 AM_CFLAGS = @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@ @PLUGIN_CFLAGS@
 
 libxrxnest_la_LIBADD = @XRX_LIBS@ @XRX_PLUGIN_LIBS@
-libxrxnest_la_LDFLAGS = -avoid-version
+libxrxnest_la_LDFLAGS = -avoid-version -module
