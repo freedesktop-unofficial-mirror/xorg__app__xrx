@@ -49,7 +49,7 @@ m4_pattern_forbid(XTRANS_CONNECTION_FLAGS)
 XTRANS_CONNECTION_FLAGS
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XRX, x11 xt xext xtrans xproxymngproto xau)
+PKG_CHECK_MODULES(XRX, x11 xt xext xtrans xproxymngproto xau ice)
 XRX_CFLAGS="$CWARNFLAGS $XRX_CFLAGS"
 AC_SUBST(XRX_CFLAGS)
 AC_SUBST(XRX_LIBS)
