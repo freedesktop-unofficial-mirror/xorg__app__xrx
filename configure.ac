@@ -26,15 +26,15 @@ AC_INIT(xrx, [1.0.3], [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require xorg-macros: XORG_CWARNFLAGS, XORG_CHANGELOG
-m4_ifndef([XORG_MACROS_VERSION], [AC_FATAL([must install xorg-macros 1.2 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.2)
+# Require xorg-macros: XORG_DEFAULT_OPTIONS
+m4_ifndef([XORG_MACROS_VERSION],
+          [m4_fatal([must install xorg-macros 1.3 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.3)
+XORG_DEFAULT_OPTIONS
+
 AM_CONFIG_HEADER(config.h)
 
-AC_PROG_CC
-AC_PROG_INSTALL
 AM_PROG_LIBTOOL
-XORG_CWARNFLAGS
 
 dnl Issue an error if xtrans.m4 was not found and XTRANS_CONNECTION_FLAGS macro
 dnl was not expanded, since libX11 with no transport types is rather useless.
@@ -82,10 +82,6 @@ AC_SUBST(PLUGIN_CFLAGS)
 PKG_CHECK_MODULES(XRX_PLUGIN, xaw7)
 AC_SUBST(XRX_PLUGIN_CFLAGS)
 AC_SUBST(XRX_PLUGIN_LIBS)
-
-XORG_MANPAGE_SECTIONS
-XORG_RELEASE_VERSION
-XORG_CHANGELOG
 
 AC_OUTPUT([
 	Makefile
