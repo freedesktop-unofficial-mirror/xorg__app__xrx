@@ -50,7 +50,6 @@ XTRANS_CONNECTION_FLAGS
 
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(XRX, x11 xt xext xtrans xproxymngproto xau ice)
-XRX_CFLAGS="$CWARNFLAGS $XRX_CFLAGS"
 
 # Check for mozilla/firefox plugin headers via pkg-config.
 if test "x$PLUGIN_CFLAGS" = x ; then

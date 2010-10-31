@@ -46,7 +46,7 @@ libxrxnest_la_SOURCES = \
 	$(XMISC_SRCS)	\
 	$(PLUGIN_SRCS)
 
-AM_CFLAGS = @XRX_CFLAGS@ @XRX_PLUGIN_CFLAGS@ @PLUGIN_CFLAGS@
+AM_CFLAGS = $(CWARNFLAGS) $(XRX_CFLAGS) $(XRX_PLUGIN_CFLAGS) $(PLUGIN_CFLAGS)
 
-libxrxnest_la_LIBADD = @XRX_LIBS@ @XRX_PLUGIN_LIBS@
+libxrxnest_la_LIBADD = $(XRX_LIBS) $(XRX_PLUGIN_LIBS)
 libxrxnest_la_LDFLAGS = -avoid-version -module

@@ -23,8 +23,8 @@ bin_PROGRAMS = xrx
 
 INCLUDES = -I$(top_srcdir)/rx
 
-AM_CFLAGS = @XRX_CFLAGS@
-LDADD = @XRX_LIBS@
+AM_CFLAGS = $(CWARNFLAGS) $(XRX_CFLAGS)
+LDADD = $(XRX_LIBS)
 
 xrx_SOURCES =		\
 	GetUrl.c	\
