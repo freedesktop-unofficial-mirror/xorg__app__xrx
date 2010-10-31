@@ -51,8 +51,6 @@ XTRANS_CONNECTION_FLAGS
 # Checks for pkg-config packages
 PKG_CHECK_MODULES(XRX, x11 xt xext xtrans xproxymngproto xau ice)
 XRX_CFLAGS="$CWARNFLAGS $XRX_CFLAGS"
-AC_SUBST(XRX_CFLAGS)
-AC_SUBST(XRX_LIBS)
 
 # Check for mozilla/firefox plugin headers via pkg-config.
 if test "x$PLUGIN_CFLAGS" = x ; then
@@ -80,8 +78,6 @@ AC_SUBST(PLUGIN_CFLAGS)
 
 
 PKG_CHECK_MODULES(XRX_PLUGIN, xaw7)
-AC_SUBST(XRX_PLUGIN_CFLAGS)
-AC_SUBST(XRX_PLUGIN_LIBS)
 
 AC_OUTPUT([
 	Makefile
