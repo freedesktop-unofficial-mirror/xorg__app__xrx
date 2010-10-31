@@ -54,11 +54,11 @@ PKG_CHECK_MODULES(XRX, x11 xt xext xtrans xproxymngproto xau ice)
 # Check for mozilla/firefox plugin headers via pkg-config.
 if test "x$PLUGIN_CFLAGS" = x ; then
     PKG_CHECK_MODULES([MOZILLA_PLUGIN], [mozilla-plugin], 
-	[PLUGIN_CFLAGS=${MOZILLA_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
+	[PLUGIN_CFLAGS="${MOZILLA_PLUGIN_CFLAGS}"], [:])
 
     if test "x$PLUGIN_CFLAGS" = x ; then
 	PKG_CHECK_MODULES([FIREFOX_PLUGIN], [firefox-plugin],
-	    [PLUGIN_CFLAGS=${FIREFOX_PLUGIN_CFLAGS}], [AC_MSG_RESULT([no])])
+	    [PLUGIN_CFLAGS="${FIREFOX_PLUGIN_CFLAGS}"], [:])
     fi
 fi
 
