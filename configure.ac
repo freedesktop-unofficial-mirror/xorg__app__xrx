@@ -27,11 +27,15 @@ AC_INIT([xrx], [1.0.4],
 AM_INIT_AUTOMAKE([dist-bzip2])
 AM_MAINTAINER_MODE
 
-# Require X.Org macros 1.8 or later for MAN_SUBSTS set by XORG_MANPAGE_SECTIONS
+# Require xorg-macros minimum of 1.10 for DocBook XML documentation
 m4_ifndef([XORG_MACROS_VERSION],
-          [m4_fatal([must install xorg-macros 1.8 or later before running autoconf/autogen])])
-XORG_MACROS_VERSION(1.8)
+          [m4_fatal([must install xorg-macros 1.10 or later before running autoconf/autogen])])
+XORG_MACROS_VERSION(1.10)
 XORG_DEFAULT_OPTIONS
+XORG_ENABLE_SPECS
+XORG_WITH_XMLTO(0.0.20)
+XORG_WITH_FOP
+XORG_CHECK_SGML_DOCTOOLS(1.5)
 
 AM_CONFIG_HEADER(config.h)
 
@@ -91,4 +95,5 @@ AC_OUTPUT([
 	rx/Makefile
 	plugin/common/Makefile
 	plugin/include/Makefile
+	specs/Makefile
 ])

@@ -19,7 +19,7 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 #  PERFORMANCE OF THIS SOFTWARE.
 
-SUBDIRS = helper plugin libxplugin htdocs cgi-bin testplugin xnest-plugin rx
+SUBDIRS = helper plugin libxplugin htdocs cgi-bin testplugin xnest-plugin rx specs
 
 EXTRA_DIST = ChangeLog
 MAINTAINERCLEANFILES = ChangeLog

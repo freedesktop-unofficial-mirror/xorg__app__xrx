@@ -1,0 +1,1041 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE article
+          PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+          "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+
+<article id="rx">
+
+<articleinfo>
+   <title>The RX Document</title>
+   <subtitle>X Consortium Standard</subtitle>
+   <releaseinfo>Version 1.0</releaseinfo>
+   <productnumber>X11 Release 6.4</productnumber>
+   <authorgroup>
+      <author>
+         <firstname>Arnaud</firstname><surname>Le Hors</surname>
+         <affiliation><orgname>X Consortium,
+Inc.</orgname></affiliation>
+         <email>lehors@x.org</email>
+      </author>
+   </authorgroup>
+
+<abstract>
+<para>
+This document describes the RX MIME type and how it can be used to
+provide
+a means to execute remote applications, such as X Window System
+clients,
+from a World Wide Web browser. To achieve this, the RX document must
+convey
+enough information for an application to get everything it needs to
+connect
+to the various resources available in the user's environment and
+display a
+graphic user interface, possibly passing through some security firewall.
+</para>
+</abstract>
+
+<legalnotice>
+<para>
+Copyright<trademark class='copyright'/>1996 X Consortium
+</para>
+
+<para>
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including without
+limitation the rights to use, copy, modify, merge, publish, distribute,
+sublicense, and sell copies of the Software, and to permit
+persons to whom the Software
+is furnished to do so, subject to the following conditions:
+</para>
+
+<para>
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+</para>
+
+<para>
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE X CONSORTIUM BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
+OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</para>
+
+<para>
+Except as contained in this notice, the name of the X Consortium shall
+not be used in advertising or otherwise to promote the sale, use or other
+dealings in this Software without prior written authorization from the
+X Consortium.
+</para>
+
+</legalnotice>
+</articleinfo>
+
+<!-- <sect1 id = 'pgfId-105699'> -->
+<sect1 id='introduction'>
+<title>Introduction</title>
+
+<para>
+The RX MIME type <xref linkend='mime'/>
+ document is designed to provide a means to execute
+remote applications, such as X Window System clients, from a World Wide
+Web browser. However, the document itself is not sufficient. To be of
+any use. it requires the browser to use the information it contains and
+to react accordingly. The general model is that the RX document conveys
+to the browser the list of services the application needs to run. In
+reaction the browser sets up the user environment for the application
+to run, and starts the application by feeding the web server back the
+relevant information. The RX document can list both required and
+optional services, leaving the browser to decide, possibly based on user
+preferences, which services are available and/or preferred.
+</para>
+
+<para>
+This document describes the RX MIME type and how the browser is
+expected to start the application by running a CGI script or equivalent <xref linkend='www_cgi'/>.
+</para>
+</sect1>
+
+<!-- <sect1 id = 'pgfId-108267'> -->
+<sect1 id = 'notational_conventions_and_generic_grammar'>
+<title>Notational Conventions and Generic Grammar</title>
+
+<para>
+All of the mechanisms specified in this document are described in
+both prose and an augmented Backus-Naur Form (BNF). Readers need to
+be familiar with the notation in order to understand this
+specification.
+The augmented BNF includes the following constructs:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term>name = definition</term>
+    <listitem>
+      <para>
+The name of a rule is simply the name itself (without any enclosing
+"&lt;" and "&gt;") and is separated from its definition by the equal
+character "=". Whitespace is only significant in that indentation
+of continuation lines is used to indicate a rule definition that
+spans more than one line. Angle brackets are used within definitions
+whenever their presence will facilitate discerning the use of rule
+names.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>"literal"</term>
+    <listitem>
+      <para>
+Quotation marks surround literal text. Unless stated otherwise, the
+text is case-insensitive.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>rule1 | rule2</term>
+    <listitem>
+      <para>
+Elements separated by a bar ("|") are alternatives, e.g.,
+"yes | no" will accept yes or no.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>(rule1 rule2)</term>
+    <listitem>
+      <para>
+Elements enclosed in parentheses are treated as a single element. Thus,
+"(elem (foo | bar) elem)" allows the token sequences "elem foo elem"
+and "elem bar elem".
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>*rule</term>
+    <listitem>
+      <para>
+The character "*" preceding an element indicates repetition. The full
+form is
+"&lt;n&gt;*&lt;m&gt;element" indicating at least &lt;n&gt; and at most &lt;m&gt; occurrences of
+element. Default values are 0 and infinity so that "*(element)" allows
+any number, including zero; "1*element" requires at least one; and
+"1*2element" allows one or two.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>[rule]</term>
+    <listitem>
+      <para>
+Square brackets enclose optional elements; "[foo bar]" is equivalent to
+"*1(foo bar)".
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+<!-- <sect2 id = 'pgfId-107395'> -->
+<sect2 id = 'basic_rules'>
+<title>Basic Rules</title>
+
+<para>
+The following rules are used throughout this specification to describe
+basic parsing constructs.
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='2' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="1*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry>OCTET</entry>
+      <entry>= &lt;any 8-bit sequence of data&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>ALPHA</entry>
+      <entry>= &lt;any US-ASCII letter "A".."Z" and "a".."z"&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>DIGIT</entry>
+      <entry>= &lt;any US-ASCII digit "0".."9"&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>CHAR</entry>
+      <entry>= &lt;any character&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>CTL</entry>
+      <entry>= &lt;any US-ASCII control character
+	 (octets 0 - 31) and DEL (127)&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>CR</entry>
+      <entry>= &lt;US-ASCII CR, carriage return (13)&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>LF</entry>
+      <entry>= &lt;US-ASCII LF, linefeed (10)&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>SP</entry>
+      <entry>= &lt;US-ASCII SP, space (32)&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>HT</entry>
+      <entry>= &lt;US-ASCII HT, horizontal-tab (9)&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>SPECIAL</entry>
+      <entry>
+= ";" | "?" | "," | "=" | "&lt;" | "&gt;" | SP | HT | CR | LF
+      </entry>
+    </row>
+    <row rowsep="0">
+      <entry>STRING</entry>
+      <entry>= 1*&lt;any CHAR except CTLs and SPECIALs&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry>TEXT</entry>
+      <entry>= &lt;any OCTET except CTLs, but including CR and LF&gt;</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+</sect2>
+</sect1>
+
+<!-- <sect1 id = 'pgfId-107148'> -->
+<sect1 id = 'the_rx_mime_type'>
+<title>The RX MIME type</title>
+
+<!-- <sect2 id = 'pgfId-107143'> -->
+<sect2 id = 'general_form'>
+<title>General form</title>
+
+<para>
+The general form of an RX document is a list of HTML PARAM elements, as
+drafted by the WWW Consortium <xref linkend='insert_into_html'/> in its simplest form:
+</para>
+
+<screen>
+"&lt;PARAM NAME=" name "VALUE=" value "&gt;"
+</screen>
+
+<para>
+One advantage of this syntax is to provide HTML authors with the
+possibility
+to easily move elements from the RX document to the HTML document
+itself,
+when the OBJECT tag becomes standard and is fully supported by web
+browsers.
+The list of possible parameters is defined in the following section.
+</para>
+
+<para>
+In addition the standard HTML comment element, which is of the form:
+</para>
+
+<screen>
+"&lt;!--" TEXT "--&gt;"
+</screen>
+
+<para>
+is supported.
+</para>
+</sect2>
+
+<!-- <sect2 id = 'pgfId-105729'> -->
+<sect2 id = 'parameters'>
+<title>Parameters</title>
+
+<para>
+First, an RX document can specify the RX version number with the
+VERSION parameter which can have the following value (in augmented BNF):
+</para>
+
+<screen>
+version	= 1*DIGIT "." 1*DIGIT
+</screen>
+
+<para>
+This allows the document to specify a major and minor numbers. When not
+specified the default value for this parameter is 1.0. When specified
+this
+must appear first in the document.
+</para>
+
+<para>
+Then, an RX document can contain any of the parameters described below,
+in any order:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term>ACTION</term>
+    <listitem>
+      <para>
+The URL to fetch to initiate the remote execution. It is equivalent to
+the
+DATA attribute of the OBJECT element and the SRC parameter of the
+Netscape™ EMBED element.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>REQUIRED-SERVICES</term>
+    <listitem>
+      <para>
+This indicates the list of services the application needs to run. This
+list
+can contain one or more of UI, PRINT as described below.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>UI</term>
+    <listitem>
+      <para>
+This indicates the list of User Interface protocols the application
+supports, in order of preference (from the most to the least preferred).
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>PRINT</term>
+    <listitem>
+      <para>
+This indicates the list of printing protocols the application support,
+in order of preference (from the most to the least preferred).
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>WIDTH and HEIGHT</term>
+    <listitem>
+      <para>
+This allows the HTML author to specify the default geometry of
+the application primary window.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>EMBEDDED</term>
+    <listitem>
+      <para>
+This indicates whether the application is to be embedded in the
+browser or not. If not specified in the RX document, the default
+value is YES, unless overridden by browser or user settings.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>AUTO-START</term>
+    <listitem>
+      <para>
+This specifies whether the application should be launched immediately
+upon retrieval of the RX document or only on user demand. For instance,
+this could be on a user click on the embedded region, or whatever other
+user interface element the browser wants to provide for this. If not
+specified in the RX document, the default value is YES, unless
+overridden
+by browser or user settings.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>APP-GROUP</term>
+    <listitem>
+      <para>
+This specifies the logical application group to which the application
+is
+related. The intent of this attribute is to allow several remote
+applications
+to be considered as a single logical application or, on the contrary,
+to
+separate various applications from each other. If not specified in the
+RX document,
+the application is considered to be alone within its own logical group.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+<para>
+The possible values for each of these parameters is respectively
+defined
+as follows (in augmented BNF):
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">action</entry>
+      <entry>= &lt;script URI&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">required-services</entry>
+      <entry>= service *( "," service )</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>service</entry>
+      <entry>	= "UI" | "PRINT"</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">ui</entry>
+      <entry>= protocols</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>protocols</entry>
+      <entry>= protocol *( "," protocol )</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>protocol</entry>
+      <entry>= STRING</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">print</entry>
+      <entry>= protocols</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">width</entry>
+      <entry>= 1*DIGIT</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">height</entry>
+      <entry>= 1*DIGIT</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">embedded</entry>
+      <entry>= "YES" | "NO"</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">auto-start</entry>
+      <entry>= "YES" | "NO"</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">app-group</entry>
+      <entry>= STRING</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+In addition to this exhaustive list of parameters, an RX document can
+also contain parameters only relevant to a particular protocol. The
+names of these parameters must be prefixed by the related protocol name
+and the value can be anything. There may be as many such parameters as
+desired. These parameters are defined as follows:
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">param-name</entry>
+      <entry>= protocol "-" STRING</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">param-name</entry>
+      <entry>= STRING</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+Every parameter can also be specified in the HTML document as an
+attribute of the OBJECT or EMBED element when one is used. When this is
+the case and a parameter is specified both in HTML and RX, the HTML
+instance has precedence over the RX one. The only exception to this
+rule is the VERSION parameter which only affects the set of parameters
+to which it is attached, whether this is in HTML or RX.
+</para>
+</sect2>
+
+<!-- <sect2 id = 'pgfId-105849'> -->
+<sect2 id = 'returned_parameters'>
+<title>Returned Parameters</title>
+
+<para>
+Once the browser has read the RX document and performed any necessary
+initialization, in response it should start the application at the
+appropriate time (see auto-start) by fetching the action URI, via an
+HTTP GET request <xref linkend='http_1_0'/>, with the following parameters list:
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">return-parameters</entry>
+      <entry>= *( "?" return-parameter )</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>return-parameter</entry>
+      <entry>
+= ui-return | print-return
+| width-return | height-return | embedded-return
+| extra-param-return
+      </entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">ui-return</entry>
+      <entry>= "UI=" ui-url</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">print-return</entry>
+      <entry>= "PRINT=" print-url</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">width-return</entry>
+      <entry>= "WIDTH=" 1*DIGIT</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">height-return</entry>
+      <entry>= "HEIGHT=" 1*DIGIT</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">embedded-return</entry>
+      <entry>= "EMBEDDED=" embedded</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">extra-param-return</entry>
+      <entry>= protocol "-" STRING "=" STRING</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+For each requested service specified in the RX document the web browser
+can respond with the corresponding return parameter. If any of the
+requested services is not listed in the returned parameters, it should
+be assumed that the service is unavailable.
+</para>
+
+<para>
+The action URI, which should be a CGI script or equivalent, must not
+only start the application with the given parameters, it is also
+expected to produce a valid document of type "text/plain". The first
+line of this document must contain an error code, either 0 for success
+or non zero for failure. The non existence of this line should be
+considered as a sign of failure. The rest of the document can then
+contain some error messages to be displayed by the browser.
+</para>
+</sect2>
+</sect1>
+
+<!-- <sect1 id = 'pgfId-105882'> -->
+<sect1 id = 'how_the_rx_document_will_be_used_in_the_x_window_system'>
+<title>How the RX document will be used in the X Window System</title>
+
+<!-- <sect2 id = 'pgfId-105884'> -->
+<sect2 id = 'parameters_b'>
+<title>Parameters</title>
+
+<para>
+In X for the UI and PRINT services respectively the protocols X and
+XPRINT are supported and are then valid protocol names.
+</para>
+
+<para>
+Also the following additional parameters are recognized:
+</para>
+
+<variablelist>
+  <varlistentry>
+    <term>X-UI-LBX, X-PRINT-LBX</term>
+    <listitem>
+      <para>
+These parameters indicate whether or not the application is LBX
+capable. If not specified in the RX document, the default value is NO,
+unless overridden by browser or user settings.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>X-UI-INPUT-METHOD</term>
+    <listitem>
+      <para>
+This indicates that the application can make use of an input method
+server. If not specified in the RX document, the default value is NO,
+unless overridden by browser or user settings.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>X-AUTH</term>
+    <listitem>
+      <para>
+This parameter specifies a default list of authentication mechanisms,
+in order of preference (from the most to the least preferred), applying
+to all services.
+      </para>
+  </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>X-UI-AUTH, X-PRINT-AUTH, X-UI-LBX-AUTH, and X-PRINT-LBX-AUTH</term>
+    <listitem>
+      <para>
+These parameters specify a list of authentication mechanisms, in order
+of preference (from the most to the least preferred), applying to one
+service in particular, that is X, XPRINT, LBX for X, and LBX for XPRINT
+respectively. They have precedence over the global X-AUTH parameter
+when both are specified.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+<para>
+The X-UI-LBX, X-PRINT-LBX parameters can have the following value:
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">x-lbx</entry>
+      <entry>= "YES" | "NO"</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+The X-UI-INPUT-METHOD parameter can have the following value:
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">x-ui-input-method</entry>
+      <entry>= ( "YES" [ ";" URL ] ) | "NO"</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+This specifies whether an input method server is available or not, and
+if one is its location can be specified as an URL.
+</para>
+
+<para>
+Each of the X-UI-AUTH, X-PRINT-AUTH, X-UI-LBX-AUTH, and
+X-PRINT-LBX-AUTH parameters have the following value:
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">xauths</entry>
+      <entry>= xauth *( "," xauth)</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>xauth</entry>
+      <entry>= xauth-name [ ":" xauth-data ]</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>xauth-name</entry>
+      <entry>= 1*&lt;any CHAR except CTLs, SPECIALs and ":"&gt;</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>xauth-data</entry>
+      <entry>= STRING</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+The authentication mechanism name can be for instance
+MIT-MAGIC-COOKIE-1 or MIT-KERBEROS-5 while the authentication data
+would be, respectively, nothing or a Kerberos principal and realm; for
+instance "webserver@mycorp.com".
+</para>
+</sect2>
+
+<!-- <sect2 id = 'pgfId-109270'> -->
+<sect2 id='returned_parameters_2'>
+<title>Returned parameters</title>
+
+<para>
+In the GET request, the returned URLs for the UI and PRINT services,
+that is for the X and XPRINT protocols, are of the form:
+</para>
+
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">ui-url</entry>
+      <entry>= "x11:" xdisplay [ ";" auth ]</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>xdisplay</entry>
+      <entry>= display | decnet-display</entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>display</entry>
+      <entry>
+= [ transport "/" ] host ":" display-num [ "." screen-num ]
+      </entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>transport</entry>
+      <entry>= "local" | "tcp" | "decnet"</entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>decnet-display
+<footnote><para>
+this syntax is supported for compatibility with Xlib and is equivalent
+to the general display specification with decnet as the transport.
+xauth is defined further.  One cannot specify an alternative such as,
+an image, within the EMBED tag.
+</para>
+</footnote>
+      </entry>
+      <entry>= host "::" display-num [ "." screen-num ]</entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>host</entry>
+      <entry>= &lt;A legal Internet host domain name or IP address (in
+dotted-decimal form), as defined by Section 2.1 of RFC 1123&gt;
+      </entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>display-num</entry>
+      <entry>= 1*DIGIT</entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>screen-num</entry>
+      <entry>= 1*DIGIT </entry>
+    </row>
+
+    <row rowsep="0">
+      <entry></entry>
+      <entry>auth</entry>
+      <entry>= "auth=" xauth
+<footnote><para>
+this syntax is supported for compatibility with Xlib and is equivalent
+to the general display specification with decnet as the transport.
+xauth is defined further.  One cannot specify an alternative such as,
+an image, within the EMBED tag.
+</para>
+</footnote>
+      </entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">print-url</entry>
+      <entry>= "xprint:" xprinter [ ";" auth]</entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>xprinter</entry>
+      <entry>
+= [ printer-name "@" ][ transport "/" ] host ":" display-num
+      </entry>
+    </row>
+    <row rowsep="0">
+      <entry></entry>
+      <entry>printer-name</entry>
+      <entry>= 1*&lt;any CHAR except CTLs, SPECIALs and "@"&gt;</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+<para>
+And in response to the X-UI-LBX, X-PRINT-LBX parameters, the following
+is given as part of the GET request:
+</para>
+
+<informaltable frame="none">
+  <tgroup cols='3' align='left'>
+  <colspec colname='c1' colsep="0" colwidth="1*"/>
+  <colspec colname='c2' colsep="0" colwidth="3*"/>
+  <colspec colname='c3' colsep="0" colwidth="10*"/>
+  <tbody>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">x-ui-lbx-return</entry>
+      <entry>= "X-UI-LBX=" ( "YES" [ ";" auth ] ) | "NO"</entry>
+    </row>
+    <row rowsep="0">
+      <entry namest="c1" nameend="c2">x-print-lbx-return</entry>
+      <entry>= "X-PRINT-LBX=" ( "YES" [ ";" auth ] ) | "NO"</entry>
+    </row>
+  </tbody>
+  </tgroup>
+</informaltable>
+
+</sect2>
+<!-- <sect2 id = 'pgfId-105923'> -->
+<sect2 id = 'example'>
+<title>Example</title>
+
+<para>
+An HTML document specifying an RX MIME-type document using the OBJECT
+tag would look like:
+</para>
+
+<programlisting>
+&lt;HTML&gt;
+...
+&lt;OBJECT data=http://www.domain.com/CalendarTool.rx
+	type=application/x-rx
+	width=500 height=400&gt;
+&lt;IMG SRC=http://www.domain.com/CalendarTool.gif ALT=CalendarTool&gt;
+&lt;/OBJECT&gt;
+...
+&lt;/HTML&gt;
+</programlisting>
+
+<para>
+With the Netscape™ EMBED tag it would look like:
+<footnote><para>
+One cannot specify an alternative such as, an image, within the EMBED tag.
+</para></footnote>
+</para>
+
+<programlisting>
+&lt;HTML&gt;
+...
+&lt;EMBED SRC=http://www.domain.com/CalendarTool.rx width=500 height=400&gt;
+...
+&lt;/HTML&gt;
+</programlisting>
+
+<para>
+The document SimCity.rx could contain the following:
+</para>
+
+<programlisting>
+&lt;PARAM Name=VERSION Value=1.0&gt;
+&lt;PARAM Name=ACTION Value=http://www.domain.com/CalendarTool.pl&gt;
+&lt;PARAM Name=REQUIRED-SERVICES Value=UI&gt;
+&lt;PARAM Name=UI VALUE=X&gt;
+&lt;PARAM Name=X-UI-LBX Value=YES&gt;
+&lt;PARAM Name=X-AUTH Value=MIT-MAGIC-COOKIE-1&gt;
+&lt;PARAM Name=EMBEDDED Value=YES&gt;
+&lt;PARAM Name=APP-GROUP Value=CalendarToolAppGroup1&gt;
+</programlisting>
+
+<para>
+From which the browser would reply by a GET of the following URI:
+</para>
+
+<programlisting>
+http://www.domain.com/CalendarTool.pl
+	?UI=x11:myhost.mydomain.org:0;auth=MIT-MAGIC-COOKIE-1:044B3244D
+	?WIDTH=500?HEIGHT=400?EMBEDDED=YES
+	?X-UI-LBX=YES;auth=MIT-MAGIC-COOKIE-1:1A7C4C1F312B3
+</programlisting>
+
+<para>
+Note that the URI is really made of a single line and is only presented
+on several lines in this document to make it easier to read.
+</para>
+</sect2>
+
+</sect1>
+
+<bibliography id='references'>
+<title>References</title>
+
+<biblioentry id='uri_www'>
+  <author>
+    <firstname>T.</firstname><surname>Berners-Lee</surname>
+  </author>
+  <title>
+Universal Resource Identifiers in WWW: A Unifying
+Syntax for the Expression of Names and Addresses of Objects on the
+Network as used in the World-Wide Web
+  </title>
+  <bibliomisc>
+FC 1630, CERN, June 1994(http://ds.internic.net/rfc/rfc1630.txt)
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id='url'>
+  <authorgroup>
+  <author>
+    <firstname>T.</firstname><surname>Berners-Lee</surname>
+  </author>
+  <author>
+    <firstname>L.</firstname><surname>Masinter</surname>
+  </author>
+  <author>
+    <firstname>M.</firstname><surname>McCahill</surname>
+  </author>
+  </authorgroup>
+  <title>Uniform Resource Locators (URL)</title>
+  <bibliomisc>
+RFC 1738, CERN, Xerox Corporation, University of
+Minnesota, December 1994
+(http://ds.internic.net/rfc/rfc1738.txt).
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id='http_1_0'>
+  <authorgroup>
+    <author>
+      <firstname>T.</firstname><surname>Berners-Lee</surname>
+    </author>
+    <author>
+      <firstname>R.</firstname><surname>Fielding</surname>
+    </author>
+    <author>
+      <firstname>H.</firstname><surname>Frystyk</surname>
+    </author>
+  </authorgroup>
+  <title>Hypertext Transfer Protocol -- HTTP/1.0</title>
+  <bibliomisc>
+May 1996, (http://www.ics.uci.edu/pub/ietf/http/rfc1945.html)
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id='mime'>
+  <authorgroup>
+    <author>
+      <firstname>N.</firstname><surname>Borenstein</surname>
+    </author>
+    <author>
+      <firstname>N.</firstname><surname>Freed</surname>
+    </author>
+  </authorgroup>
+  <title>
+MIME (Multipurpose Internet Mail Extensions) Part One:
+Mechanisms for Specifying and Describing the
+Format of Internet Message Bodies
+  </title>
+  <bibliomisc>
+RFC 1521, Bellcore, Innosoft,
+September 1993 (http://ds.internic.net/rfc/rfc1521.txt).
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id='insert_into_html'>
+  <author>
+    <firstname>Dave</firstname><surname>Raggett</surname>
+  </author>
+  <title>
+Inserting objects into HTML
+  </title>
+  <bibliomisc>
+W3C Working Draft 22-Apr-96
+(http://www.w3.org/pub/WWW/TR/WD-object-960422.html)
+  </bibliomisc>
+</biblioentry>
+
+<biblioentry id='www_cgi'>
+  <author>
+    <firstname>David</firstname><surname>Robinson</surname>
+  </author>
+  <title>
+The WWW Common Gateway Interface Version 1.1
+  </title>
+  <bibliomisc>
+University of Cambridge UK, 15 February 1996
+(http://www.ast.cam.ac.uk/~drtr/cgi-spec.html)
+  </bibliomisc>
+</biblioentry>
+
+</bibliography>
+
+</article>
