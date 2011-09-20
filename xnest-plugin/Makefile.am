@@ -23,7 +23,7 @@ lib_LTLIBRARIES = libxrxnest.la
 RXSRC = $(top_srcdir)/rx
 PLUGINSRC = $(top_srcdir)/plugin
 
-INCLUDES = -I$(RXSRC)
+INCLUDES = -I$(RXSRC) -I$(PLUGINSRC)/include
 
 # -DPLUGIN_TRACE can be added to the following definition to debug
 PLUGIN_DEFINES = -DXP_UNIX -DMOZ_X11 -DOJI
@@ -49,4 +49,4 @@ libxrxnest_la_SOURCES = \
 AM_CFLAGS = $(CWARNFLAGS) $(XRX_CFLAGS) $(XRX_PLUGIN_CFLAGS) $(PLUGIN_CFLAGS)
 
 libxrxnest_la_LIBADD = $(XRX_LIBS) $(XRX_PLUGIN_LIBS)
-libxrxnest_la_LDFLAGS = -avoid-version -module
+libxrxnest_la_LDFLAGS = -avoid-version -module -no-undefined
