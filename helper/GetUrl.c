@@ -97,11 +97,7 @@ GetUrl(char *url, char **reply_ret, int *len_ret)
 #include <ctype.h>
 
 /* get definitions for the HTTP protocol */
-#if !defined(UNIXCPP) || defined(ANSICPP)
 #define TRANS(func) _HttpTrans##func
-#else
-#define TRANS(func) _HttpTrans/**/func
-#endif
 #define TRANS_CLIENT
 #include <X11/Xtrans/Xtrans.h>
 
